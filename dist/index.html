@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Интерактивная логическая задача о скрытых связях между переменными">
+  <title>Контур — логическая лаборатория</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="shell">
+    <header>
+      <a class="brand" href="#" aria-label="Контур — на главную"><span>К</span> КОНТУР</a>
+      <div class="system-status"><i></i> СИСТЕМА АКТИВНА</div>
+    </header>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow">HAHAHAH</p>
+        <h1>I HATE <em>SAT I MADE MY OWN THING</em></h1>
+        <p class="lede">Меняйте параметры по одному. Каждое действие может влиять на другие,ваша задача понять систему и привести её к цели.</p>
+      </div>
+      <div class="mode" role="group" aria-label="Версия системы">
+        <button class="mode-btn active" data-version="linear">01 · ЛИНЕЙНАЯ</button>
+        <button class="mode-btn" data-version="nonlinear">02 · НЕЛИНЕЙНАЯ</button>
+      </div>
+    </section>
+
+    <details class="conditions panel" open>
+      <summary><span>УСЛОВИЯ ЗАДАЧИ</span><span class="summary-action">СВЕРНУТЬ / РАЗВЕРНУТЬ</span></summary>
+      <div class="conditions-body">
+        <p id="system-rule"></p>
+        <ul>
+          <li>Перед вами система из шести объектов: <strong>A, B, C, D, E и F</strong>.</li>
+          <li>Каждый объект имеет значение <strong>от 1 до 10</strong>.</li>
+          <li>За одно действие можно увеличить или уменьшить один выбранный объект на 1.</li>
+          <li>Каждое действие расходует <strong>1 R</strong>.</li>
+          <li>Изменение одного объекта может повлиять на другие объекты.</li>
+          <li>Все изменения происходят по постоянным правилам. Случайных эффектов нет.</li>
+          <li>Если действие выводит хотя бы одно значение за пределы 1–10, оно отменяется, но 1 R расходуется.</li>
+          <li>Систему можно перезапускать без ограничений: значения и R вернутся к исходным.</li>
+        </ul>
+      </div>
+    </details>
+
+    <section class="game-grid">
+      <div class="board panel">
+        <div class="panel-head">
+          <span>ПАРАМЕТРЫ</span>
+          <span class="attempt-label">ПОПЫТКА 01</span>
+        </div>
+        <div class="nodes" id="nodes"></div>
+      </div>
+
+      <aside>
+        <section class="resource panel">
+          <div class="panel-head"><span>РЕСУРС</span><span>R</span></div>
+          <div class="resource-row"><strong id="resource">12</strong><span>/ 12</span></div>
+          <div class="meter"><i id="meter"></i></div>
+          <p>Каждое действие расходует 1 единицу. Для победы сохраните не менее 3.</p>
+        </section>
+
+        <section class="goals panel">
+          <div class="panel-head"><span>ЦЕЛЕВОЕ СОСТОЯНИЕ</span><span id="goal-count">1 / 4</span></div>
+          <ul id="goals"></ul>
+        </section>
+
+        <button class="restart" id="restart"><span>↻</span> НОВАЯ ПОПЫТКА</button>
+      </aside>
+    </section>
+
+    <section class="log panel">
+      <div class="panel-head"><span>ЖУРНАЛ НАБЛЮДЕНИЙ</span><button id="toggle-log">СВЕРНУТЬ ↑</button></div>
+      <div class="log-body" id="log"><p class="empty">Совершите действие, чтобы начать исследование.</p></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <dialog id="win-dialog">
+    <div class="win-mark">✓</div>
+    <p class="eyebrow">СИСТЕМА СТАБИЛИЗИРОВАНА</p>
+    <h2>Контур замкнут</h2>
+    <p id="win-copy"></p>
+    <button id="win-restart">РЕШИТЬ ЕЩЁ РАЗ</button>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
