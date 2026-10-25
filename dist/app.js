@@ -11,9 +11,8 @@ function effectFor(key,delta,before){
     if(key==='C') changes.A=delta;
     if(key==='D'||key==='E') changes.F=delta;
   }else{
-    if(key==='A') (before.B>=5?changes.B=-delta:changes.C=delta);
-    if(key==='B'&&before.C>=4) changes.D=-delta;
-    if(key==='C') changes.A=delta;
+    if(key==='A') (before.B>=6?changes.B=-delta:changes.C=-delta);
+    if(key==='C') (before.B>=6?changes.A=delta:changes.F=-delta);
     if(key==='D'&&before.E<=3) changes.F=delta;
     if(key==='E') (before.D>=5?changes.F=delta:changes.A=delta);
   }
@@ -33,10 +32,15 @@ function act(key,delta){
   if(isWin()){locked=true;setTimeout(win,350)}
 }
 
-function isWin(){return state.A>=7&&state.D<=3&&state.F>=6&&resource>=3}
-function goalData(){return [
-  [`A ≥ 7`,state.A>=7],[`D ≤ 3`,state.D<=3],[`F ≥ 6`,state.F>=6],[`R ≥ 3`,resource>=3]
-]}
+function isWin(){return goalData().every(([,met])=>met)}
+function goalData(){
+  const goals=[[`A ≥ 7`,state.A>=7]];
+  if(version==='nonlinear') goals.push([`B ≥ 6`,state.B>=6]);
+  goals.push([`D ≤ 3`,state.D<=3]);
+  goals.push(version==='nonlinear'?[`F ≥ 7`,state.F>=7]:[`F ≥ 6`,state.F>=6]);
+  goals.push([`R ≥ 3`,resource>=3]);
+  return goals;
+}
 function stateText(s){return Object.entries(s).map(([k,v])=>`${k}${v}`).join('  ')}
 function render(changed=[]){
   document.querySelector('#system-rule').innerHTML=version==='linear'
@@ -45,7 +49,7 @@ function render(changed=[]){
   nodesEl.innerHTML=Object.keys(state).map(k=>`<article class="node ${changed.includes(k)?'changed':''}"><span class="node-letter">ПАРАМЕТР ${k}</span><div class="node-value">${state[k]}</div><div class="controls"><button aria-label="Уменьшить ${k}" data-k="${k}" data-d="-1">−</button><button aria-label="Увеличить ${k}" data-k="${k}" data-d="1">+</button></div></article>`).join('');
   resourceEl.textContent=resource;meterEl.style.width=`${Math.max(0,resource)/12*100}%`;
   const goals=goalData();goalsEl.innerHTML=goals.map(([t,m])=>`<li class="${m?'met':''}"><span>${t}</span><span class="goal-icon">${m?'✓':'·'}</span></li>`).join('');
-  document.querySelector('#goal-count').textContent=`${goals.filter(x=>x[1]).length} / 4`;
+  document.querySelector('#goal-count').textContent=`${goals.filter(x=>x[1]).length} / ${goals.length}`;
   document.querySelector('.attempt-label').textContent=`ПОПЫТКА ${String(attempt).padStart(2,'0')}`;
   document.querySelector('#log').innerHTML=log.length?log.map((e,i)=>`<div class="entry ${e.valid?'':'failed'}"><span>#${String(log.length-i).padStart(2,'0')}</span><span class="action">${e.action}</span><span class="effect">${stateText(e.before)} → ${stateText(e.after)}</span><span>${e.valid?'ПРИНЯТО':'ОТКЛОНЕНО'}</span></div>`).join(''):'<p class="empty">Совершите действие, чтобы начать исследование.</p>';
 }
